@@ -138,4 +138,4 @@ docker-compose up mongo -d
 
 ## Frontend
 
-The React frontend for this API lives at [task-manager-client](https://github.com/YOUR_USERNAME/task-manager-client).
+The React frontend for this API lives at [task-manager-client](https://github.com/Tojohtml98/-task-manager-client).
