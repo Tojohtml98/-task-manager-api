@@ -1,4 +1,4 @@
-# Task Manager API
+# Taskflow API
 
 REST API for a task management application built with Node.js, Express and MongoDB. Features a clean layered architecture, JWT authentication with refresh tokens, and full test coverage.
 
@@ -79,8 +79,8 @@ All `/api/projects` routes require a `Bearer` token in the `Authorization` heade
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/task-manager-api
-cd task-manager-api
+git clone https://github.com/Tojohtml98/taskflow-api
+cd taskflow-api
 
 # 2. Install dependencies
 npm install
@@ -138,4 +138,4 @@ docker-compose up mongo -d
 
 ## Frontend
 
-The React frontend for this API lives at [task-manager-client](https://github.com/Tojohtml98/-task-manager-client).
+The React frontend for this API lives at [taskflow-client](https://github.com/Tojohtml98/taskflow-client).
