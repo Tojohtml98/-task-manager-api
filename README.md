@@ -2,6 +2,10 @@
 
 REST API for a task management application built with Node.js, Express and MongoDB. Features a clean layered architecture, JWT authentication with refresh tokens, and full test coverage.
 
+**Live demo:** [taskflow-api-mti1.onrender.com/health](https://taskflow-api-mti1.onrender.com/health) · **Frontend:** [taskflow-client-nu.vercel.app](https://taskflow-client-nu.vercel.app)
+
+> ⚠️ Render free tier duerme tras 15 min de inactividad — la primera petición puede tardar ~30s.
+
 ## Tech Stack
 
 - **Runtime:** Node.js
