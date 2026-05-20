@@ -1,10 +1,30 @@
 # Taskflow API
 
-REST API for a task management application built with Node.js, Express and MongoDB. Features a clean layered architecture, JWT authentication with refresh tokens, and full test coverage.
+> Production-grade REST API for task management — JWT auth with refresh token rotation, layered architecture and 30 integration tests.
 
-**Live demo:** [taskflow-api-mti1.onrender.com/health](https://taskflow-api-mti1.onrender.com/health) · **Frontend:** [taskflow-client-nu.vercel.app](https://taskflow-client-nu.vercel.app)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/express-4.x-000000?logo=express&logoColor=white)](https://expressjs.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
+[![Tests](https://img.shields.io/badge/tests-30%20passing-brightgreen)](#testing)
+[![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)](#docker)
 
-> ⚠️ Render free tier duerme tras 15 min de inactividad — la primera petición puede tardar ~30s.
+### 🚀 Live
+
+| | Link |
+|---|---|
+| **API** | https://taskflow-api-mti1.onrender.com |
+| **Frontend** | https://taskflow-client-nu.vercel.app |
+| **Repo (frontend)** | [taskflow-client](https://github.com/Tojohtml98/taskflow-client) |
+
+> ⚠️ Render free tier sleeps after 15 min of inactivity — first request may take ~30s.
+
+### Highlights
+
+- 🔐 **Stateless auth** — access tokens (15m) + refresh token rotation with logout invalidation
+- 🧱 **Strict layered architecture** — Route → Controller → Service → Repository → Model. No layer skips another.
+- 🧪 **30 integration tests** — auth flows, CRUD, ownership enforcement. In-memory Mongo, no external DB needed.
+- 🐳 **Dockerized** — `docker-compose up` and you have API + Mongo running locally.
+- ☁️ **Deployed** — Blueprint config (`render.yaml`) ready to redeploy in 1 click.
 
 ## Tech Stack
 
