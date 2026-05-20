@@ -14,6 +14,24 @@ app.use((req, res, next) => {
   next()
 })
 
+app.get('/', (req, res) => res.json({
+  name: 'Taskflow API',
+  status: 'live',
+  version: '1.0.0',
+  frontend: 'https://taskflow-client-nu.vercel.app',
+  repository: 'https://github.com/Tojohtml98/taskflow-api',
+  endpoints: {
+    health: 'GET /health',
+    auth: {
+      register: 'POST /api/auth/register',
+      login: 'POST /api/auth/login',
+      refresh: 'POST /api/auth/refresh',
+      logout: 'POST /api/auth/logout'
+    },
+    projects: 'GET|POST|PUT|DELETE /api/projects (Bearer token required)'
+  }
+}))
+
 app.get('/health', (req, res) => res.json({ status: 'ok' }))
 
 app.use(helmet())
