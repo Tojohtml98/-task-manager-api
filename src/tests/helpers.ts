@@ -1,14 +1,16 @@
-const request = require('supertest')
-const app = require('../app')
+import request from 'supertest'
+import app from '../app'
 
-const registerUser = async (overrides = {}) => {
+type Overrides = Record<string, unknown>
+
+export const registerUser = async (overrides: Overrides = {}) => {
   const res = await request(app)
     .post('/api/auth/register')
     .send({ name: 'Test User', email: 'test@example.com', password: 'password123', ...overrides })
   return res.body
 }
 
-const createProject = async (token, overrides = {}) => {
+export const createProject = async (token: string, overrides: Overrides = {}) => {
   const res = await request(app)
     .post('/api/projects')
     .set('Authorization', `Bearer ${token}`)
@@ -16,12 +18,10 @@ const createProject = async (token, overrides = {}) => {
   return res.body
 }
 
-const createTask = async (token, projectId, overrides = {}) => {
+export const createTask = async (token: string, projectId: string, overrides: Overrides = {}) => {
   const res = await request(app)
     .post(`/api/projects/${projectId}/tasks`)
     .set('Authorization', `Bearer ${token}`)
     .send({ title: 'Test Task', ...overrides })
   return res.body
 }
-
-module.exports = { registerUser, createProject, createTask }

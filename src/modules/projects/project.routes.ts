@@ -1,12 +1,14 @@
-const router = require('express').Router()
-const {
+import { Router } from 'express'
+import {
   createProjectController,
   getProjectsController,
   getProjectController,
   updateProjectController,
-  deleteProjectController
-} = require('./project.controller')
-const taskRoutes = require('../tasks/task.routes')
+  deleteProjectController,
+} from './project.controller'
+import taskRoutes from '../tasks/task.routes'
+
+const router = Router()
 
 router.get('/', getProjectsController)
 router.post('/', createProjectController)
@@ -16,4 +18,4 @@ router.delete('/:id', deleteProjectController)
 
 router.use('/:projectId/tasks', taskRoutes)
 
-module.exports = router
+export default router

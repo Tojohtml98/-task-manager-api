@@ -1,20 +1,21 @@
-require('express-async-errors')
-const express = require('express')
-const cors = require('cors')
-const helmet = require('helmet')
-const { errorHandler } = require('./middleware/errorHandler')
-const { authenticate } = require('./middleware/authenticate')
-const authRoutes = require('./modules/auth/auth.routes')
-const projectRoutes = require('./modules/projects/project.routes')
+import 'express-async-errors'
+import express, { Request, Response, NextFunction } from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import { errorHandler } from './middleware/errorHandler'
+import { authenticate } from './middleware/authenticate'
+import authRoutes from './modules/auth/auth.routes'
+import projectRoutes from './modules/projects/project.routes'
 
 const app = express()
 
-app.use((req, res, next) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
   console.log(`[REQ] ${req.method} ${req.url}`)
   next()
 })
 
-app.get('/', (req, res) => res.type('html').send(`<!DOCTYPE html>
+app.get('/', (_req: Request, res: Response) =>
+  res.type('html').send(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -63,15 +64,18 @@ app.get('/', (req, res) => res.type('html').send(`<!DOCTYPE html>
     <li><span class="method">CRUD</span><span class="path">/api/projects</span><span class="note">Bearer token</span></li>
   </ul>
 </body>
-</html>`))
+</html>`)
+)
 
-app.get('/health', (req, res) => res.json({ status: 'ok' }))
+app.get('/health', (_req: Request, res: Response) => res.json({ status: 'ok' }))
 
 app.use(helmet())
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
-  credentials: true
-}))
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: true,
+  })
+)
 app.use(express.json())
 
 app.use('/api/auth', authRoutes)
@@ -79,4 +83,4 @@ app.use('/api/projects', authenticate, projectRoutes)
 
 app.use(errorHandler)
 
-module.exports = app
+export default app

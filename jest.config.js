@@ -1,10 +1,14 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
+  preset: 'ts-jest',
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.js'],
-  testMatch: ['**/__tests__/**/*.test.js'],
+  setupFiles: ['<rootDir>/src/tests/env.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts'],
+  testMatch: ['**/__tests__/**/*.test.ts'],
   collectCoverageFrom: [
-    'src/**/*.js',
-    '!src/server.js',
-    '!src/config/**'
-  ]
+    'src/**/*.ts',
+    '!src/server.ts',
+    '!src/config/**',
+    '!src/types/**',
+  ],
 }

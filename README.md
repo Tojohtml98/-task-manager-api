@@ -1,7 +1,8 @@
-# Taskflow API
+# TaskFlow API
 
-> Production-grade REST API for task management — JWT auth with refresh token rotation, layered architecture and 30 integration tests.
+> Production-grade REST API for task management — written in **TypeScript**, with JWT auth and refresh token rotation, a strict layered architecture and 30 integration tests.
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/express-4.x-000000?logo=express&logoColor=white)](https://expressjs.com)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
@@ -14,12 +15,13 @@
 |---|---|
 | **API** | https://taskflow-api-mti1.onrender.com |
 | **Frontend** | https://taskflow-client-nu.vercel.app |
-| **Repo (frontend)** | [taskflow-client](https://github.com/Tojohtml98/taskflow-client) |
+| **Repo (frontend)** | [taskflow-web](https://github.com/Tojohtml98/taskflow-web) |
 
 > ⚠️ Render free tier sleeps after 15 min of inactivity — first request may take ~30s.
 
 ### Highlights
 
+- 🔷 **TypeScript, strict mode** — typed domain models, typed `req.user` via declaration merging, no implicit `any`
 - 🔐 **Stateless auth** — access tokens (15m) + refresh token rotation with logout invalidation
 - 🧱 **Strict layered architecture** — Route → Controller → Service → Repository → Model. No layer skips another.
 - 🧪 **30 integration tests** — auth flows, CRUD, ownership enforcement. In-memory Mongo, no external DB needed.
@@ -28,11 +30,12 @@
 
 ## Tech Stack
 
+- **Language:** TypeScript (strict)
 - **Runtime:** Node.js
 - **Framework:** Express
 - **Database:** MongoDB + Mongoose
 - **Auth:** JWT (access token 15m + refresh token 7d)
-- **Testing:** Jest + Supertest + mongodb-memory-server
+- **Testing:** Jest + ts-jest + Supertest + mongodb-memory-server
 - **Containerization:** Docker + Docker Compose
 
 ## Architecture
@@ -116,11 +119,21 @@ cp .env.example .env
 # 4. Start MongoDB (optional — uses Docker)
 docker-compose up mongo -d
 
-# 5. Start the server
+# 5. Start the server (dev, with hot reload via ts-node-dev)
 npm run dev
 ```
 
 The API will be available at `http://localhost:3000`.
+
+### Scripts
+
+| Script | What it does |
+|---|---|
+| `npm run dev` | Run with hot reload (ts-node-dev) |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm start` | Run the compiled build (`dist/server.js`) — used in production |
+| `npm run typecheck` | Type-check without emitting |
+| `npm test` | Run the integration test suite |
 
 ## Environment Variables
 
@@ -162,4 +175,4 @@ docker-compose up mongo -d
 
 ## Frontend
 
-The React frontend for this API lives at [taskflow-client](https://github.com/Tojohtml98/taskflow-client).
+The React frontend for this API lives at [taskflow-web](https://github.com/Tojohtml98/taskflow-web).

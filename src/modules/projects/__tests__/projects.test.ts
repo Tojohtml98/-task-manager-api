@@ -1,11 +1,11 @@
-const request = require('supertest')
-const app = require('../../../app')
-const { registerUser, createProject } = require('../../../tests/helpers')
+import request from 'supertest'
+import app from '../../../app'
+import { registerUser, createProject } from '../../../tests/helpers'
 
 const BASE = '/api/projects'
 
-let token
-let otherToken
+let token: string
+let otherToken: string
 
 beforeEach(async () => {
   ;({ accessToken: token } = await registerUser())
@@ -31,14 +31,12 @@ describe('POST /api/projects', () => {
 })
 
 describe('GET /api/projects', () => {
-  it('returns only the authenticated user\'s projects', async () => {
+  it("returns only the authenticated user's projects", async () => {
     await createProject(token, { name: 'P1' })
     await createProject(token, { name: 'P2' })
     await createProject(otherToken, { name: 'Other project' })
 
-    const res = await request(app)
-      .get(BASE)
-      .set('Authorization', `Bearer ${token}`)
+    const res = await request(app).get(BASE).set('Authorization', `Bearer ${token}`)
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveLength(2)

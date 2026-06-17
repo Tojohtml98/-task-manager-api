@@ -1,10 +1,10 @@
-const request = require('supertest')
-const app = require('../../../app')
-const { registerUser, createProject, createTask } = require('../../../tests/helpers')
+import request from 'supertest'
+import app from '../../../app'
+import { registerUser, createProject, createTask } from '../../../tests/helpers'
 
-let token
-let otherToken
-let projectId
+let token: string
+let otherToken: string
+let projectId: string
 
 beforeEach(async () => {
   ;({ accessToken: token } = await registerUser())
@@ -52,18 +52,14 @@ describe('GET /api/projects/:projectId/tasks', () => {
     await createTask(token, projectId, { title: 'Task 1' })
     await createTask(token, projectId, { title: 'Task 2' })
 
-    const res = await request(app)
-      .get(tasksUrl())
-      .set('Authorization', `Bearer ${token}`)
+    const res = await request(app).get(tasksUrl()).set('Authorization', `Bearer ${token}`)
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveLength(2)
   })
 
   it('returns 403 for a project not owned by the user', async () => {
-    const res = await request(app)
-      .get(tasksUrl())
-      .set('Authorization', `Bearer ${otherToken}`)
+    const res = await request(app).get(tasksUrl()).set('Authorization', `Bearer ${otherToken}`)
 
     expect(res.status).toBe(403)
   })

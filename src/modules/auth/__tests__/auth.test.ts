@@ -1,5 +1,5 @@
-const request = require('supertest')
-const app = require('../../../app')
+import request from 'supertest'
+import app from '../../../app'
 
 const BASE = '/api/auth'
 
@@ -60,13 +60,13 @@ describe('POST /api/auth/login', () => {
 
 describe('POST /api/auth/refresh', () => {
   it('returns new tokens for a valid refresh token', async () => {
-    const { refreshToken } = (await request(app)
-      .post(`${BASE}/register`)
-      .send({ name: 'Dave', email: 'dave@example.com', password: 'secret123' })).body
+    const { refreshToken } = (
+      await request(app)
+        .post(`${BASE}/register`)
+        .send({ name: 'Dave', email: 'dave@example.com', password: 'secret123' })
+    ).body
 
-    const res = await request(app)
-      .post(`${BASE}/refresh`)
-      .send({ refreshToken })
+    const res = await request(app).post(`${BASE}/refresh`).send({ refreshToken })
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('accessToken')
@@ -83,9 +83,11 @@ describe('POST /api/auth/refresh', () => {
 
 describe('POST /api/auth/logout', () => {
   it('logs out an authenticated user', async () => {
-    const { accessToken } = (await request(app)
-      .post(`${BASE}/register`)
-      .send({ name: 'Eve', email: 'eve@example.com', password: 'secret123' })).body
+    const { accessToken } = (
+      await request(app)
+        .post(`${BASE}/register`)
+        .send({ name: 'Eve', email: 'eve@example.com', password: 'secret123' })
+    ).body
 
     const res = await request(app)
       .post(`${BASE}/logout`)

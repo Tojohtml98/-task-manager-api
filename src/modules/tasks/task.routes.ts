@@ -1,11 +1,13 @@
-const router = require('express').Router({ mergeParams: true })
-const {
+import { Router } from 'express'
+import {
   createTaskController,
   getTasksController,
   getTaskController,
   updateTaskController,
-  deleteTaskController
-} = require('./task.controller')
+  deleteTaskController,
+} from './task.controller'
+
+const router = Router({ mergeParams: true })
 
 router.get('/', getTasksController)
 router.post('/', createTaskController)
@@ -13,4 +15,4 @@ router.get('/:taskId', getTaskController)
 router.patch('/:taskId', updateTaskController)
 router.delete('/:taskId', deleteTaskController)
 
-module.exports = router
+export default router
