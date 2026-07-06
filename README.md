@@ -2,6 +2,7 @@
 
 > Production-grade REST API for task management — written in **TypeScript**, with JWT auth and refresh token rotation, a strict layered architecture and 30 integration tests.
 
+[![CI](https://github.com/Tojohtml98/taskflow-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Tojohtml98/taskflow-api/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/express-4.x-000000?logo=express&logoColor=white)](https://expressjs.com)
