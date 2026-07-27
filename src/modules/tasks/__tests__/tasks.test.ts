@@ -136,3 +136,48 @@ describe('DELETE /api/projects/:projectId/tasks/:taskId', () => {
     expect(res.status).toBe(403)
   })
 })
+
+describe('validación de body', () => {
+  it('returns 400 when title is missing on create', async () => {
+    const res = await request(app)
+      .post(tasksUrl())
+      .set('Authorization', `Bearer ${token}`)
+      .send({ description: 'sin titulo' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/title/i)
+  })
+
+  it('returns 400 for an invalid priority on create', async () => {
+    const res = await request(app)
+      .post(tasksUrl())
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Valid title', priority: 'urgentisimo' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/priority/i)
+  })
+
+  it('returns 400 for an invalid status on update', async () => {
+    const task = await createTask(token, projectId)
+
+    const res = await request(app)
+      .patch(`${tasksUrl()}/${task._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ status: 'casi-listo' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/status/i)
+  })
+
+  it('strips unknown fields instead of persisting them', async () => {
+    const res = await request(app)
+      .post(tasksUrl())
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Limpia', isAdmin: true, project: 'hackeado' })
+
+    expect(res.status).toBe(201)
+    expect(res.body.isAdmin).toBeUndefined()
+    expect(res.body.project).toBe(projectId)
+  })
+})

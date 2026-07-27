@@ -6,12 +6,14 @@ import {
   logoutController,
 } from './auth.controller'
 import { authenticate } from '../../middleware/authenticate'
+import { validateBody } from '../../middleware/validate'
+import { registerSchema, loginSchema, refreshSchema } from './auth.schema'
 
 const router = Router()
 
-router.post('/register', registerController)
-router.post('/login', loginController)
-router.post('/refresh', refreshController)
+router.post('/register', validateBody(registerSchema), registerController)
+router.post('/login', validateBody(loginSchema), loginController)
+router.post('/refresh', validateBody(refreshSchema), refreshController)
 router.post('/logout', authenticate, logoutController)
 
 export default router

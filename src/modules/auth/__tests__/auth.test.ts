@@ -101,3 +101,44 @@ describe('POST /api/auth/logout', () => {
     expect(res.status).toBe(401)
   })
 })
+
+describe('validación de body', () => {
+  it('returns 400 for an invalid email on register', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'Tomas', email: 'no-es-un-mail', password: 'secret123' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/email/i)
+  })
+
+  it('returns 400 for a password shorter than 6 chars', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'Tomas', email: 'corto@example.com', password: '123' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/password/i)
+  })
+
+  it('does not allow privilege escalation via role in the body', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'Hacker',
+        email: 'hacker@example.com',
+        password: 'secret123',
+        role: 'admin',
+      })
+
+    expect(res.status).toBe(201)
+    expect(res.body.user.role).toBe('user')
+  })
+
+  it('returns 400 when refreshToken is missing', async () => {
+    const res = await request(app).post('/api/auth/refresh').send({})
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/refresh/i)
+  })
+})

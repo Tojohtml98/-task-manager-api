@@ -121,3 +121,37 @@ describe('DELETE /api/projects/:id', () => {
     expect(res.status).toBe(403)
   })
 })
+
+describe('validación de body', () => {
+  it('returns 400 when name is missing on create', async () => {
+    const res = await request(app)
+      .post('/api/projects')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ description: 'sin nombre' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/name/i)
+  })
+
+  it('returns 400 for an invalid status on update', async () => {
+    const project = await createProject(token)
+
+    const res = await request(app)
+      .patch(`/api/projects/${project._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ status: 'pausado' })
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/status/i)
+  })
+
+  it('ignores owner sent in the body', async () => {
+    const res = await request(app)
+      .post('/api/projects')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'Mio', owner: '000000000000000000000000' })
+
+    expect(res.status).toBe(201)
+    expect(res.body.owner).not.toBe('000000000000000000000000')
+  })
+})

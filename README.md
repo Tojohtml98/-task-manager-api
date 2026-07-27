@@ -25,7 +25,8 @@
 - 🔷 **TypeScript, strict mode** — typed domain models, typed `req.user` via declaration merging, no implicit `any`
 - 🔐 **Stateless auth** — access tokens (15m) + refresh token rotation with logout invalidation
 - 🧱 **Strict layered architecture** — Route → Controller → Service → Repository → Model. No layer skips another.
-- 🧪 **30 integration tests** — auth flows, CRUD, ownership enforcement. In-memory Mongo, no external DB needed.
+- 🛡️ **Schema validation at the edge** — zod validates and strips every request body before it reaches a controller. Unknown fields never reach the DB.
+- 🧪 **41 integration tests** — auth flows, CRUD, ownership enforcement, input validation. In-memory Mongo, no external DB needed.
 - 🐳 **Dockerized** — `docker-compose up` and you have API + Mongo running locally.
 - ☁️ **Deployed** — Blueprint config (`render.yaml`) ready to redeploy in 1 click.
 
@@ -36,6 +37,7 @@
 - **Framework:** Express
 - **Database:** MongoDB + Mongoose
 - **Auth:** JWT (access token 15m + refresh token 7d)
+- **Validation:** zod (schema-per-module, applied as route middleware)
 - **Testing:** Jest + ts-jest + Supertest + mongodb-memory-server
 - **Containerization:** Docker + Docker Compose
 
@@ -50,7 +52,7 @@ Request → Route → Controller → Service → Repository → Model
 ```
 src/
 ├── config/          # DB connection and env vars
-├── middleware/       # JWT authenticate, role authorize, error handler
+├── middleware/       # JWT authenticate, role authorize, body validation, error handler
 └── modules/
     ├── auth/         # Register, login, refresh, logout
     ├── projects/     # Project CRUD (model, repository, service, controller, routes)
@@ -65,7 +67,9 @@ src/
 - Task CRUD — nested under projects with priority, status and due date
 - Role-based authorization middleware (`admin` / `user`)
 - Global async error handling via `express-async-errors`
-- 30 integration tests covering auth, projects and tasks
+- Request body validation with zod on every write endpoint — returns `400` with per-field detail
+- Mass-assignment protection: unknown fields (`role`, `owner`, `project`) are stripped, not persisted
+- 41 integration tests covering auth, projects, tasks and validation
 
 ## API Endpoints
 
@@ -158,10 +162,10 @@ npm test
 
 ```
 Test Suites: 3 passed
-Tests:       30 passed
-  ✓ auth   — register, login, refresh, logout
-  ✓ projects — CRUD + ownership enforcement
-  ✓ tasks  — CRUD + project access control
+Tests:       41 passed
+  ✓ auth   — register, login, refresh, logout + body validation
+  ✓ projects — CRUD + ownership enforcement + body validation
+  ✓ tasks  — CRUD + project access control + body validation
 ```
 
 ## Docker
