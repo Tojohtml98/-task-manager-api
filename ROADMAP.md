@@ -15,6 +15,7 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 - Deploy en Render con `render.yaml`
 - **Validación de request body con zod (2026-07-27)** — `validateBody` middleware + un schema por módulo, aplicado en todos los endpoints de escritura. Devuelve `400` con detalle por campo y descarta campos desconocidos (protección contra mass assignment).
 - 41 tests de integración (Jest + Supertest + mongodb-memory-server)
+- CI en GitHub Actions: typecheck + tests + build en cada push
 
 ## 🔜 Próximo
 
@@ -22,7 +23,6 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 - [ ] Validar también `params` y `query`, no solo `body` (un `:projectId` que no es ObjectId hoy llega hasta Mongoose).
 - [ ] Rate limiting en `/api/auth/login` y `/register` (`express-rate-limit`) — estándar en cualquier API pública.
 - [ ] Logger estructurado (`pino`) en lugar del `console.log` de `app.ts`.
-- [ ] CI en GitHub Actions: correr `tsc --noEmit` + `npm test` en cada push.
 
 ## 💤 Descartado / no vale el tiempo por ahora
 
