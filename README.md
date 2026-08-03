@@ -1,13 +1,13 @@
 # TaskFlow API
 
-> Production-grade REST API for task management — written in **TypeScript**, with JWT auth and refresh token rotation, a strict layered architecture and 30 integration tests.
+> Production-grade REST API for task management — written in **TypeScript**, with JWT auth and refresh token rotation, a strict layered architecture and 41 integration tests.
 
 [![CI](https://github.com/Tojohtml98/taskflow-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Tojohtml98/taskflow-api/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/express-4.x-000000?logo=express&logoColor=white)](https://expressjs.com)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
-[![Tests](https://img.shields.io/badge/tests-30%20passing-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-41%20passing-brightgreen)](#testing)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)](#docker)
 
 ### 🚀 Live
@@ -16,7 +16,7 @@
 |---|---|
 | **API** | https://taskflow-api-mti1.onrender.com |
 | **Frontend** | https://taskflow-client-nu.vercel.app |
-| **Repo (frontend)** | [taskflow-web](https://github.com/Tojohtml98/taskflow-web) |
+| **Repo (frontend)** | [taskflow-client](https://github.com/Tojohtml98/taskflow-client) |
 
 > ⚠️ Render free tier sleeps after 15 min of inactivity — first request may take ~30s.
 
@@ -72,6 +72,12 @@ src/
 - 41 integration tests covering auth, projects, tasks and validation
 
 ## API Endpoints
+
+### Meta
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| `GET` | `/` | Landing page with API info | ✗ |
+| `GET` | `/health` | Health check — returns `{ "status": "ok" }` | ✗ |
 
 ### Auth
 | Method | Endpoint | Description | Auth |
@@ -150,6 +156,8 @@ JWT_REFRESH_SECRET=your_refresh_secret_here
 JWT_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
 NODE_ENV=development
+# Allowed origin for CORS. Defaults to '*' when unset.
+CORS_ORIGIN=https://your-app.vercel.app
 ```
 
 ## Testing
@@ -180,4 +188,4 @@ docker-compose up mongo -d
 
 ## Frontend
 
-The React frontend for this API lives at [taskflow-web](https://github.com/Tojohtml98/taskflow-web).
+The React frontend for this API lives at [taskflow-client](https://github.com/Tojohtml98/taskflow-client).
