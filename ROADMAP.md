@@ -19,10 +19,11 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 - **`auth.repository.ts` (2026-08-04)** — `auth` ya sigue el mismo patrón Route → Controller → Service → Repository → Model que `projects` y `tasks`. El service no vuelve a importar el model directo.
 - **Validación de `params` (2026-08-04)** — `validateParams` middleware + `objectIdSchema` de zod. Un `:id`/`:projectId`/`:taskId` con formato inválido ahora corta con 400 antes de llegar a Mongoose (antes: `CastError` sin `statusCode` → 500 genérico). No hay `query` params en uso todavía (no hay endpoints con filtros/paginación), así que esa parte del ítem queda para cuando aparezca un caso real.
 
+- **Rate limiting en `/api/auth/login` y `/register` (2026-08-04)** — `authRateLimiter` (`express-rate-limit`, 10 intentos / 15 min por IP) montado antes de `validateBody` en ambas rutas. Se auto-desactiva en `NODE_ENV=test` (si no, los 40+ requests de `auth.test.ts` que comparten IP en supertest empezaban a chocar entre sí con 429). Comportamiento real probado aparte en `rateLimiter.test.ts` forzando `NODE_ENV=production` para ese describe.
+
 ## 🔜 Próximo
 
 - [ ] Query params: recién tiene sentido validar cuando se agregue filtrado/paginación real (hoy no hay ningún endpoint que lea `req.query`) (un `:projectId` que no es ObjectId hoy llega hasta Mongoose).
-- [ ] Rate limiting en `/api/auth/login` y `/register` (`express-rate-limit`) — estándar en cualquier API pública.
 - [ ] Logger estructurado (`pino`) en lugar del `console.log` de `app.ts`.
 
 ## 💤 Descartado / no vale el tiempo por ahora
@@ -34,6 +35,8 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 ---
 
 ## Registro
+
+**2026-08-04 (3)** — Rate limiting en `/api/auth/login` y `/register` con `express-rate-limit` (10 intentos / 15 min por IP). `authRateLimiter` va antes de `validateBody` en `auth.routes.ts`. Se desactiva en `NODE_ENV=test` para no romper `auth.test.ts` (comparte IP en supertest); comportamiento real cubierto por `rateLimiter.test.ts` forzando `NODE_ENV=production`. 46/46 tests verdes.
 
 **2026-08-04 (2)** — Validación de `params` con zod (`validateParams` + `objectIdSchema`). Aplicado en las rutas de `projects` y `tasks` que reciben `:id`/`:projectId`/`:taskId`. 3 tests nuevos que prueban el caso puntual (id malformado → 400, no 500). 44/44 tests verdes.
 
