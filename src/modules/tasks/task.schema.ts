@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import { objectIdSchema } from '../../middleware/validate'
+
+export const projectIdParamsSchema = z.object({ projectId: objectIdSchema })
+export const taskParamsSchema = z.object({ projectId: objectIdSchema, taskId: objectIdSchema })
 
 const status = z.enum(['todo', 'in-progress', 'done'])
 const priority = z.enum(['low', 'medium', 'high'])

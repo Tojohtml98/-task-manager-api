@@ -7,17 +7,23 @@ import {
   deleteProjectController,
 } from './project.controller'
 import taskRoutes from '../tasks/task.routes'
-import { validateBody } from '../../middleware/validate'
-import { createProjectSchema, updateProjectSchema } from './project.schema'
+import { validateBody, validateParams } from '../../middleware/validate'
+import { createProjectSchema, updateProjectSchema, projectParamsSchema } from './project.schema'
+import { projectIdParamsSchema } from '../tasks/task.schema'
 
 const router = Router()
 
 router.get('/', getProjectsController)
 router.post('/', validateBody(createProjectSchema), createProjectController)
-router.get('/:id', getProjectController)
-router.patch('/:id', validateBody(updateProjectSchema), updateProjectController)
-router.delete('/:id', deleteProjectController)
+router.get('/:id', validateParams(projectParamsSchema), getProjectController)
+router.patch(
+  '/:id',
+  validateParams(projectParamsSchema),
+  validateBody(updateProjectSchema),
+  updateProjectController
+)
+router.delete('/:id', validateParams(projectParamsSchema), deleteProjectController)
 
-router.use('/:projectId/tasks', taskRoutes)
+router.use('/:projectId/tasks', validateParams(projectIdParamsSchema), taskRoutes)
 
 export default router

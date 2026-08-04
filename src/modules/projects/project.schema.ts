@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import { objectIdSchema } from '../../middleware/validate'
+
+export const projectParamsSchema = z.object({ id: objectIdSchema })
 
 export const createProjectSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(200),

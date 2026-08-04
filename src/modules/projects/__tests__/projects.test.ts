@@ -155,3 +155,14 @@ describe('validación de body', () => {
     expect(res.body.owner).not.toBe('000000000000000000000000')
   })
 })
+
+describe('validación de params', () => {
+  it('returns 400 for a malformed id instead of a 500', async () => {
+    const res = await request(app)
+      .get('/api/projects/not-an-object-id')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/id/i)
+  })
+})

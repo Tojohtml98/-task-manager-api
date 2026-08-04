@@ -181,3 +181,23 @@ describe('validación de body', () => {
     expect(res.body.project).toBe(projectId)
   })
 })
+
+describe('validación de params', () => {
+  it('returns 400 for a malformed projectId instead of a 500', async () => {
+    const res = await request(app)
+      .get('/api/projects/not-an-object-id/tasks')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/projectId/i)
+  })
+
+  it('returns 400 for a malformed taskId instead of a 500', async () => {
+    const res = await request(app)
+      .get(`${tasksUrl()}/not-an-object-id`)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.body.error.message).toMatch(/taskId/i)
+  })
+})
