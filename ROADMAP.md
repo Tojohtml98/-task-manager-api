@@ -16,10 +16,10 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 - **Validación de request body con zod (2026-07-27)** — `validateBody` middleware + un schema por módulo, aplicado en todos los endpoints de escritura. Devuelve `400` con detalle por campo y descarta campos desconocidos (protección contra mass assignment).
 - 41 tests de integración (Jest + Supertest + mongodb-memory-server)
 - CI en GitHub Actions: typecheck + tests + build en cada push
+- **`auth.repository.ts` (2026-08-04)** — `auth` ya sigue el mismo patrón Route → Controller → Service → Repository → Model que `projects` y `tasks`. El service no vuelve a importar el model directo.
 
 ## 🔜 Próximo
 
-- [ ] `auth` no tiene `repository` — el service habla directo al model. Es la única inconsistencia de capas que queda. Agregar `auth.repository.ts` para que los 3 módulos sigan el mismo patrón.
 - [ ] Validar también `params` y `query`, no solo `body` (un `:projectId` que no es ObjectId hoy llega hasta Mongoose).
 - [ ] Rate limiting en `/api/auth/login` y `/register` (`express-rate-limit`) — estándar en cualquier API pública.
 - [ ] Logger estructurado (`pino`) en lugar del `console.log` de `app.ts`.
@@ -33,5 +33,7 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 ---
 
 ## Registro
+
+**2026-08-04** — `auth.repository.ts` agregado. El service ya no importa `User` directo: usa `authRepository.{create, findByEmail, findById, updateRefreshToken}`. `register`/`login`/`refresh` dejaron de mutar la instancia de Mongoose y hacer `.save()` a mano — ahora persisten con `findByIdAndUpdate` igual que `projects` y `tasks`. Typecheck limpio, 41/41 tests verdes sin tocarlos (la capa de arriba no cambió de contrato).
 
 **2026-07-27** — Validación con zod en los 3 módulos. 30 → 41 tests. Hallazgo: el body llegaba crudo al service, así que un `priority` inválido devolvía 500 en vez de 400, y campos como `role` o `owner` mandados por el cliente podían persistirse.

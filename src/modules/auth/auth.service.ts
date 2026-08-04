@@ -1,5 +1,5 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
-import User from './user.model'
+import authRepository from './auth.repository'
 import { AppError } from '../../middleware/errorHandler'
 import env from '../../config/env'
 import { AuthPayload } from '../../types'
@@ -26,30 +26,27 @@ const generateTokens = (userId: string, role: string) => {
 }
 
 const register = async ({ name, email, password }: RegisterInput) => {
-  const exists = await User.findOne({ email })
+  const exists = await authRepository.findByEmail(email)
   if (exists) throw new AppError('Email already in use', 400)
 
-  const user = await User.create({ name, email, password })
-  const { accessToken, refreshToken } = generateTokens(user._id.toString(), user.role)
-
-  user.refreshToken = refreshToken
-  await user.save()
+  const created = await authRepository.create({ name, email, password })
+  const { accessToken, refreshToken } = generateTokens(created._id.toString(), created.role)
+  const user = await authRepository.updateRefreshToken(created._id.toString(), refreshToken)
 
   return { user, accessToken, refreshToken }
 }
 
 const login = async ({ email, password }: LoginInput) => {
-  const user = await User.findOne({ email })
+  const user = await authRepository.findByEmail(email)
   if (!user) throw new AppError('Invalid credentials', 401)
 
   const valid = await user.comparePassword(password)
   if (!valid) throw new AppError('Invalid credentials', 401)
 
   const { accessToken, refreshToken } = generateTokens(user._id.toString(), user.role)
-  user.refreshToken = refreshToken
-  await user.save()
+  const updated = await authRepository.updateRefreshToken(user._id.toString(), refreshToken)
 
-  return { user, accessToken, refreshToken }
+  return { user: updated, accessToken, refreshToken }
 }
 
 const refresh = async (token: string) => {
@@ -62,19 +59,18 @@ const refresh = async (token: string) => {
     throw new AppError('Invalid refresh token', 401)
   }
 
-  const user = await User.findById(payload.id)
+  const user = await authRepository.findById(payload.id)
 
   if (!user || user.refreshToken !== token) throw new AppError('Invalid refresh token', 401)
 
   const tokens = generateTokens(user._id.toString(), user.role)
-  user.refreshToken = tokens.refreshToken
-  await user.save()
+  await authRepository.updateRefreshToken(user._id.toString(), tokens.refreshToken)
 
   return tokens
 }
 
 const logout = async (userId: string) => {
-  await User.findByIdAndUpdate(userId, { refreshToken: null })
+  await authRepository.updateRefreshToken(userId, null)
 }
 
 export default { register, login, refresh, logout }
