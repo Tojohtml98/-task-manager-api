@@ -20,11 +20,11 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 - **Validación de `params` (2026-08-04)** — `validateParams` middleware + `objectIdSchema` de zod. Un `:id`/`:projectId`/`:taskId` con formato inválido ahora corta con 400 antes de llegar a Mongoose (antes: `CastError` sin `statusCode` → 500 genérico). No hay `query` params en uso todavía (no hay endpoints con filtros/paginación), así que esa parte del ítem queda para cuando aparezca un caso real.
 
 - **Rate limiting en `/api/auth/login` y `/register` (2026-08-04)** — `authRateLimiter` (`express-rate-limit`, 10 intentos / 15 min por IP) montado antes de `validateBody` en ambas rutas. Se auto-desactiva en `NODE_ENV=test` (si no, los 40+ requests de `auth.test.ts` que comparten IP en supertest empezaban a chocar entre sí con 429). Comportamiento real probado aparte en `rateLimiter.test.ts` forzando `NODE_ENV=production` para ese describe.
+- **Logger estructurado con pino (2026-08-04)** — `src/config/logger.ts` reemplaza todos los `console.log`/`console.error` del proyecto (`server.ts`, `db.ts`, `app.ts`). Request logging vía `pino-http` (JSON en producción, `pino-pretty` con colores solo en `development`; `silent` en `test` para no ensuciar la salida de Jest). De paso se sacó un `console.log` en `db.ts` que imprimía los primeros 40 caracteres del `MONGODB_URI` (podía filtrar parte de las credenciales de conexión) — ya no hace falta, `conn.connection.host` alcanza para confirmar la conexión.
 
 ## 🔜 Próximo
 
 - [ ] Query params: recién tiene sentido validar cuando se agregue filtrado/paginación real (hoy no hay ningún endpoint que lea `req.query`) (un `:projectId` que no es ObjectId hoy llega hasta Mongoose).
-- [ ] Logger estructurado (`pino`) en lugar del `console.log` de `app.ts`.
 
 ## 💤 Descartado / no vale el tiempo por ahora
 
@@ -35,6 +35,8 @@ Estado del proyecto y próximos pasos. Se actualiza al cerrar cada sesión de tr
 ---
 
 ## Registro
+
+**2026-08-04 (4)** — Logger estructurado con pino. `src/config/logger.ts` + `pino-http` para request logging, reemplaza todos los `console.*` (`server.ts`, `db.ts`, `app.ts`). Nivel `silent` en test, `debug`+pretty en development, `info` JSON en production. De paso se eliminó un log en `db.ts` que exponía un prefijo del `MONGODB_URI`. 46/46 tests verdes, build y typecheck limpios.
 
 **2026-08-04 (3)** — Rate limiting en `/api/auth/login` y `/register` con `express-rate-limit` (10 intentos / 15 min por IP). `authRateLimiter` va antes de `validateBody` en `auth.routes.ts`. Se desactiva en `NODE_ENV=test` para no romper `auth.test.ts` (comparte IP en supertest); comportamiento real cubierto por `rateLimiter.test.ts` forzando `NODE_ENV=production`. 46/46 tests verdes.
 

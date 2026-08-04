@@ -1,7 +1,9 @@
 import 'express-async-errors'
-import express, { Request, Response, NextFunction } from 'express'
+import express, { Request, Response } from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
+import pinoHttp from 'pino-http'
+import logger from './config/logger'
 import { errorHandler } from './middleware/errorHandler'
 import { authenticate } from './middleware/authenticate'
 import authRoutes from './modules/auth/auth.routes'
@@ -9,10 +11,7 @@ import projectRoutes from './modules/projects/project.routes'
 
 const app = express()
 
-app.use((req: Request, _res: Response, next: NextFunction) => {
-  console.log(`[REQ] ${req.method} ${req.url}`)
-  next()
-})
+app.use(pinoHttp({ logger }))
 
 app.get('/', (_req: Request, res: Response) =>
   res.type('html').send(`<!DOCTYPE html>
