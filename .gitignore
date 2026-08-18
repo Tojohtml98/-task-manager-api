@@ -3,3 +3,6 @@ node_modules
 .claude/
 coverage/
 dist/
+
+# salida generada por /graphify (se regenera, no versionar)
+graphify-out/
